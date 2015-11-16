@@ -1,16 +1,14 @@
-from re import T
-
 import numpy as np
 
 class Neural_Network(object):
     def __init__(self):
         #Define HyperParameters
-        self.inputLayerSize = 7
-        self.outputLayerSize = 1
+        self.inputLayerSize = 7.
+        self.outputLayerSize = 1.
         #Using (training)/arb(input size + output size)
-        self.hiddenLayerSize = 10
+        self.hiddenLayerSize = 10.
 
-        self.W1 = np.random.randn(self.inputLaterSize,
+        self.W1 = np.random.randn(self.inputLayerSize,
                                  self.hiddenLayerSize)
         self.W2 = np.random.randn(self.hiddenLayerSize,
                                   self.outputLayerSize)
@@ -33,7 +31,7 @@ class Neural_Network(object):
         delta2 = np.dot(delta3, self.W2.T) * self.sigmoidPrime(self.z2)
         dJdW1 = np.dot(X.T, delta2)
 
-        return dJdW1,
+        return dJdW1,dJdW2
 
     def sigmoid(self, z):
         #Apply sigmoid activation function
@@ -41,4 +39,28 @@ class Neural_Network(object):
 
     def sigmoidPrime(self, z):
         return np.exp(-z)/((1+np.exp(-z))**2)
+
+    def costFunction(self, X, y):
+        self.yHat = self.forward(X)
+        print "yHat", self.yHat
+        J = 0.5*sum((y-self.yHat)**2)
+        print "J", J
+        return J
+
+    def getParams(self):
+        print "W1", self.W1
+        print "W2", self.W2
+        params = np.concatenate((self.W1.ravel(), self.W2.ravel()))
+        return params
+
+    def setParams(self, params):
+        W1_start = 0
+        W1_end = self.hiddenLayerSize * self.inputLayerSize
+        self.W1 = np.reshape(params[W1_start:W1_end], (self.inputLayerSize, self.hiddenLayerSize))
+        W2_end = W1_end + self.hiddenLayerSize*self.outputLayerSize
+        self.W2 = np.reshape(params[W1_end:W2_end], (self.hiddenLayerSize, self.outputLayerSize))
+
+    def computeGradients(self, X, y):
+        dJdW1, dJdW2 = self.costFunctionPrime(X, y)
+        return np.concatenate((dJdW1.ravel(), dJdW2.ravel()))
 
