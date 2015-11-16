@@ -3,7 +3,7 @@ import new
 import numpy as np
 from PIL import Image
 from features import *
-from nnet import neuron
+from nnet import Neural_Network as neuron
 import ubyte_unpack
 
 def main():
@@ -39,8 +39,6 @@ def main():
         cur_inputs.append(hgt_to_wdth(i))
         cur_inputs.append(num_holes(i))
         inputs.append(cur_inputs)
-    nrn = neuron(inputs, np.array(solutions).T)
-    #print nrn.forward_prop()
 
 if __name__ == "__main__":
     main()
