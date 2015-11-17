@@ -1,2 +1,5 @@
 #Ignore these directories
 .idea
+
+#Ignore these files
+*.pyc

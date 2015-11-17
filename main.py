@@ -3,7 +3,8 @@ import new
 import numpy as np
 from PIL import Image
 from features import *
-from nnet import Neural_Network as neuron
+from nnet import Neural_Network
+from trainer import trainer
 import ubyte_unpack
 
 def main():
@@ -20,11 +21,11 @@ def main():
                 solutions.append(1)
             else:
                 solutions.append(0)
-        if count == 80:
+        if count == 10:
             break
     print solutions
 
-    for i in range(80):
+    for i in range(10):
         cur_inputs = []
         i = Image.open("./test_cases/test_" + str(i) + ".png")
         cur_inputs.append(float(pix_density(i)))
@@ -36,35 +37,25 @@ def main():
         cur_inputs.append(float(num_holes(i)))
         inputs.append(cur_inputs)
 
-    def computeNumericalGradient(N, X, y):
-        paramsInitial = N.getParams()
-        numgrad = np.zeros(paramsInitial.shape)
-        perturb = np.zeros(paramsInitial.shape)
-        e = 1e-4
+    inputs = np.array(inputs, dtype=float)
+    solutions = np.matrix(solutions, dtype=float).T
+    solutions = np.array(solutions, dtype=float)
+    inputs = inputs/np.amax(inputs, axis = 0)
 
-        for p in range(len(paramsInitial)):
-            #Set perturbation vector
-            perturb[p] = e
-            N.setParams(paramsInitial + perturb)
-            loss2 = N.costFunction(X, y)
+    print solutions
 
-            N.setParams(paramsInitial - perturb)
-            loss1 = N.costFunction(X, y)
-            print "numgrad", numgrad, len(numgrad)
-            #Compute Numerical Gradient
-            numgrad[p] = (loss2 - loss1) / (2*e)
-
-            #Return the value we changed to zero:
-            perturb[p] = 0
-
-        #Return Params to original value:
-        N.setParams(paramsInitial)
-
-        return numgrad
-
-    NN = neuron()
-    numgrad = computeNumericalGradient(NN, inputs, solutions)
-    print numgrad
+    NN = Neural_Network()
+    T = trainer(NN)
+    T.train(inputs, solutions)
+    yHat = NN.forward(inputs)
+    count = 0
+    b_yHat = []
+    for i in range(len(yHat)):
+        b_yHat.append(float(round(yHat[i][0])))
+        if solutions[i] == b_yHat[i]:
+            count += 1
+    print b_yHat
+    print "Prediction percentage:", count/len(yHat) * 100
 
 if __name__ == "__main__":
     main()
