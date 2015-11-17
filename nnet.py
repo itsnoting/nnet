@@ -17,6 +17,7 @@ class Neural_Network(object):
         self.a2 = self.sigmoid(self.z2)
         self.z3 = np.dot(self.a2, self.W2)
         yHat = self.sigmoid(self.z3)
+
         return yHat
 
     def sigmoid(self, z):

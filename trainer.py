@@ -13,7 +13,7 @@ class trainer(object):
     def costFunctionWrapper(self, params, X, y):
         self.N.setParams(params)
         cost = self.N.costFunction(X, y)
-        grad = self.N.computeGradients(X,y)
+        grad = self.N.computeGradients(X, y)
         return cost, grad
 
     def train(self, X, y):
@@ -26,9 +26,12 @@ class trainer(object):
 
         params0 = self.N.getParams()
 
-        options = {'maxiter': 200, 'disp' : True}
+        options = {'maxiter': 200, 'disp': False}
         _res = optimize.minimize(self.costFunctionWrapper, params0, jac=True, method='BFGS', \
                                  args=(X, y), options=options, callback=self.callbackF)
 
         self.N.setParams(_res.x)
         self.optimizationResults = _res
+
+    def build_features(self):
+        features = []

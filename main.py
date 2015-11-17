@@ -5,57 +5,40 @@ from PIL import Image
 from features import *
 from nnet import Neural_Network
 from trainer import trainer
-import ubyte_unpack
+from ubyte_unpack import ubyte_unpack
+
+def pred_perc(actual, pred):
+    count = 0
+    for i in range(len(actual)):
+        if actual[i] == pred[i]:
+            count += 1
+    return float(count/float(len(actual)))
+
+def matrix_to_list(matrix):
+    return [float(round(n, 0)) for n in list(np.array(matrix).reshape(-1))]
 
 def main():
-    inputs = []
-    solutions = []
-    count = 0
-    generator = ubyte_unpack.read()
-    for img in generator:
-        if img[0] == 5 or img[0] == 1:
-            im = Image.fromarray(img[1])
-            im.save('./test_cases/test_' + str(count) + '.png')
-            count += 1
-            if img[0] == 5:
-                solutions.append(1)
-            else:
-                solutions.append(0)
-        if count == 10:
-            break
-    print solutions
 
-    for i in range(10):
-        cur_inputs = []
-        i = Image.open("./test_cases/test_" + str(i) + ".png")
-        cur_inputs.append(float(pix_density(i)))
-        cur_inputs.append(float(density_ul(i)))
-        cur_inputs.append(float(density_ur(i)))
-        cur_inputs.append(float(density_bl(i)))
-        cur_inputs.append(float(density_br(i)))
-        cur_inputs.append(float(hgt_to_wdth(i)))
-        cur_inputs.append(float(num_holes(i)))
-        inputs.append(cur_inputs)
-
-    inputs = np.array(inputs, dtype=float)
-    solutions = np.matrix(solutions, dtype=float).T
-    solutions = np.array(solutions, dtype=float)
-    inputs = inputs/np.amax(inputs, axis = 0)
-
-    print solutions
+    trainer_set = ubyte_unpack("./ubyte", "training")
+    inputs, solutions = trainer_set.get_dataset(100)
 
     NN = Neural_Network()
     T = trainer(NN)
     T.train(inputs, solutions)
-    yHat = NN.forward(inputs)
-    count = 0
-    b_yHat = []
-    for i in range(len(yHat)):
-        b_yHat.append(float(round(yHat[i][0])))
-        if solutions[i] == b_yHat[i]:
-            count += 1
-    print b_yHat
-    print "Prediction percentage:", count/len(yHat) * 100
+    yHat = matrix_to_list(NN.forward(inputs))
+    solutions = matrix_to_list(solutions)
+    percent = pred_perc(solutions, yHat)
+    print "Prediction percentage:", percent * 100
+
+    tester_set = ubyte_unpack("./ubyte", "testing")
+    X, y = tester_set.get_dataset(1000)
+
+    test_yHat = matrix_to_list(NN.forward(X))
+    y = matrix_to_list(y)
+    test_percent = pred_perc(y, test_yHat)
+    print "Test prediction percentage:", test_percent * 100
+    print "Current first level weights:", NN.W1
+    print "Current second level weights:", NN.W2
 
 if __name__ == "__main__":
     main()
