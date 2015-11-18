@@ -4,13 +4,12 @@ import struct
 import numpy as np
 from features import *
 
+
 class ubyte_unpack(object):
 
     def __init__(self, path, dataset="training"):
         self.dataset = dataset
         self.path = path
-
-
 
     def _read(self):
         """
@@ -37,7 +36,6 @@ class ubyte_unpack(object):
             img = np.fromfile(fimg, dtype=np.uint8).reshape(len(lbl), rows, cols)
 
         get_img = lambda idx: (lbl[idx], img[idx])
-
 
         # Create an iterator which returns each image in turn
         for i in xrange(len(lbl)):
@@ -66,7 +64,6 @@ class ubyte_unpack(object):
                 count += 1
             if len(solutions) == num_of_sets:
                 break
-
 
         for i in range(num_of_sets):
             cur_inputs = []
