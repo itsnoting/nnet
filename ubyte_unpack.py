@@ -74,7 +74,9 @@ class ubyte_unpack(object):
             cur_inputs.append(float(density_bl(i)))
             cur_inputs.append(float(density_br(i)))
             cur_inputs.append(float(hgt_to_wdth(i)))
+            cur_inputs.append(float(horiz_symmetry(i)))
             cur_inputs.append(float(num_holes(i)))
+            cur_inputs.append(float(num_intersections(i)))
             inputs.append(cur_inputs)
 
         inputs = np.array(inputs, dtype=float)

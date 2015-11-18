@@ -3,7 +3,7 @@ import numpy as np
 class Neural_Network(object):
     def __init__(self):
         #Define Hyperparameters
-        self.inputLayerSize = 7
+        self.inputLayerSize = 9
         self.outputLayerSize = 1
         self.hiddenLayerSize = 10
 

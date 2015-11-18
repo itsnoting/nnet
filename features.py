@@ -97,6 +97,26 @@ def num_holes(img):
         fw = find_first_white(pixels)
     return num_holes
 
+def horiz_symmetry(img):
+    pixels = img.load()
+    symmetry = 0
+    for i in range(img.size[0]/2):
+        for j in range(img.size[1]):
+            if pixels[j,i] > 100 and pixels[28-j,i]:
+                symmetry += 1
+    return symmetry
+
+def num_intersections(img):
+    pixels = img.load()
+    intersections = 0
+    for i in range(img.size[0]):
+        for j in range(img.size[1]):
+            if j is not 0:
+                if pixels[j,i] != pixels[j-1,i]:
+                    intersections += 1
+    return intersections
+
+
 
 
 
