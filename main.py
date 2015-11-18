@@ -54,8 +54,8 @@ def main():
     y = matrix_to_list(y)
     test_percent = pred_perc(y, test_yHat)
     print "Test prediction percentage:", test_percent * 100
-    print "\n\nCurrent first level weights:", NN.W1
-    print "Current second level weights:", NN.W2
+    print "\n\nCurrent first synapse weights:", NN.W1
+    print "Current second lsynapse weights:", NN.W2
 
 if __name__ == "__main__":
     main()
