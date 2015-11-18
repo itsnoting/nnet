@@ -11,6 +11,13 @@ class Neural_Network(object):
         self.W1 = np.random.randn(self.inputLayerSize, self.hiddenLayerSize)
         self.W2 = np.random.randn(self.hiddenLayerSize, self.outputLayerSize)
 
+    def set_weights(self, W1, W2):
+        self.W1 = W1
+        self.W2 = W2
+
+    def get_weights(self):
+        return self.W1, self.W2
+
     def forward(self, X):
         #Propagate inputs though network
         self.z2 = np.dot(X, self.W1)
